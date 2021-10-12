@@ -1,8 +1,8 @@
 // Requirements for importing packages
 const express = require('express')
 const path = require('path')
-const fs = require('fs')
-const notesDB = require('./db/db.json');
+const fs = require('fs');
+const e = require('express');
 
 // Initialize PORT and Express Application
 const PORT = process.env.PORT || 3000;
@@ -16,21 +16,65 @@ app.get('/', (request, response) => response.sendFile(path.join(__dirname, '/pub
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static Public files
+
+// Routes
+// Static Public HTML file routes
 app.get('/', (request, response) => {
-    response.sendFile(path.join(__dirname, 'public/index.html'))
+    response.sendFile(path.join(__dirname, 'public/notes.html'))
 })
 
 app.get('/notes', (request, response) => {
     response.sendFile(path.join(__dirname, 'public/notes.html'))
 })
 
+// APIs
 // Get API for reading the current notes
 app.get('/api/notes', (request, response) => {
-    fs.readFile('./db/db.json', (error, notes) => {
+    fs.readFile('./db/db.json', 'utf8', (error, notes) => {
         if(error){console.log(error)}
                 response.json(JSON.parse(notes))
     })
+})
+
+// Post API for saving the entered note
+app.post('/api/notes', (request, response) => {
+    
+    const { title, text } = request.body
+
+    if (title && text) {
+    
+        // New note to be saved
+        const newNote = {
+            title,
+            text,
+            note_id: Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
+        };
+    
+        // Getting existing notes first
+        fs.readFile('./db/db.json', 'utf8', (error, data) => {
+            if(error) {
+                console.log(error)
+            } else {
+
+                const parsedNotes = JSON.parse(data)
+
+                parsedNotes.push(newNote)
+        
+                fs.writeFile('./db/db.json', JSON.stringify(parsedNotes), (error) => {
+                    if(error){
+                        console.log(error)
+                    } else {
+                        console.log(`Note has been written`)
+                    }
+                })
+
+            }
+        })    
+
+
+
+    }
+
 })
 
 // Listening for application
