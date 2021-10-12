@@ -66,6 +66,7 @@ app.post('/api/notes', (request, response) => {
                         console.log(error)
                     } else {
                         console.log(`Note has been written`)
+                        response.end()
                     }
                 })
 
