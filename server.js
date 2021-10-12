@@ -41,6 +41,7 @@ app.post('/api/notes', (request, response) => {
     
     const { title, text } = request.body
 
+    // Checks that both a title and text were saved
     if (title && text) {
     
         // New note to be saved
