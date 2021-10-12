@@ -48,7 +48,7 @@ app.post('/api/notes', (request, response) => {
         const newNote = {
             title,
             text,
-            note_id: Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
+            id: Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
         };
     
         // Getting existing notes first
