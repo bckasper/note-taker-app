@@ -74,7 +74,7 @@ app.post('/api/notes', (request, response) => {
     }
 })
 
-// POST API for deleting the entered note
+// DELETE API for deleting the entered note
 app.delete('/api/notes/:id', (request, response) => {
 
     // ID of the item we want to delete
